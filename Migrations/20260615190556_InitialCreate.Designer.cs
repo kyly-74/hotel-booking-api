@@ -12,8 +12,8 @@ using hotel_booking_api.Data;
 namespace hotel_booking_api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260615115115_InitialDatabase")]
-    partial class InitialDatabase
+    [Migration("20260615190556_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

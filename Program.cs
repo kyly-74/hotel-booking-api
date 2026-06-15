@@ -1,5 +1,8 @@
-using Microsoft.EntityFrameworkCore;
 using hotel_booking_api.Data;
+using hotel_booking_api.Services;
+using hotel_booking_api.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using Quan_ly_dat_phong_khach_san_truc_tuyen.Services.Admin;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +16,12 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// Đăng ký dịch vụ Email
+builder.Services.AddScoped<IEmailService, EmailService>();
+
+//ADMIN:
+builder.Services.AddScoped<IAdminService, AdminService>();
 
 var app = builder.Build();
 

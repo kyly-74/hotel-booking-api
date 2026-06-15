@@ -42,9 +42,9 @@ namespace hotel_booking_api.Models
         [Column(TypeName = "decimal(14,2)")]
         public decimal TotalPrice { get; set; }
 
-        /// <summary>Pending | Confirmed | CheckedIn | CheckedOut | Cancelled</summary>
+
         [MaxLength(30)]
-        public string Status { get; set; } = "Pending";
+        public BookingStatus Status { get; set; } = BookingStatus.Pending;
 
         // OTP dùng cho email passwordless / confirm booking
         [MaxLength(10)]
