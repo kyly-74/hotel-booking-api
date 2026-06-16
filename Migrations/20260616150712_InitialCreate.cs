@@ -378,7 +378,7 @@ namespace hotel_booking_api.Migrations
                 columns: new[] { "Id", "CreatedAt", "Email", "FullName", "IsLocked", "PasswordHash", "PhoneNumber", "Role" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "admin@hotelbooking.vn", "Admin System", false, "hashed_admin_password", "0243123456", "Admin" },
+                    { 1, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "admin@hotelbooking.vn", "Admin System", false, "$2a$11$OTDvj9bM//52gU9hVGZz2eOviOkegZz8OgMnopehFSztkFptn8Cqa", "0243123456", "Admin" },
                     { 2, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "manager@grandhotel.vn", "Nguyễn Văn Quản Lý", false, "hashed_manager_password", "0901234567", "HotelManager" },
                     { 3, new DateTime(2024, 2, 1, 0, 0, 0, 0, DateTimeKind.Utc), "customer1@gmail.com", "Trần Thị Khách Hàng", false, null, "0987654321", "Customer" },
                     { 4, new DateTime(2024, 3, 1, 0, 0, 0, 0, DateTimeKind.Utc), "customer2@gmail.com", "Lê Văn Bình", false, null, "0912345678", "Customer" }

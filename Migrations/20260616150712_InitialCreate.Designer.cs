@@ -12,7 +12,7 @@ using hotel_booking_api.Data;
 namespace hotel_booking_api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260615190556_InitialCreate")]
+    [Migration("20260616150712_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -808,7 +808,7 @@ namespace hotel_booking_api.Migrations
                             Email = "admin@hotelbooking.vn",
                             FullName = "Admin System",
                             IsLocked = false,
-                            PasswordHash = "hashed_admin_password",
+                            PasswordHash = "$2a$11$OTDvj9bM//52gU9hVGZz2eOviOkegZz8OgMnopehFSztkFptn8Cqa",
                             PhoneNumber = "0243123456",
                             Role = "Admin"
                         },

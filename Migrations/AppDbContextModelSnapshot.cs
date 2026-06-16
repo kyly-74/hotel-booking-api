@@ -805,7 +805,7 @@ namespace hotel_booking_api.Migrations
                             Email = "admin@hotelbooking.vn",
                             FullName = "Admin System",
                             IsLocked = false,
-                            PasswordHash = "hashed_admin_password",
+                            PasswordHash = "$2a$11$OTDvj9bM//52gU9hVGZz2eOviOkegZz8OgMnopehFSztkFptn8Cqa",
                             PhoneNumber = "0243123456",
                             Role = "Admin"
                         },

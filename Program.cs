@@ -2,7 +2,6 @@ using hotel_booking_api.Data;
 using hotel_booking_api.Services;
 using hotel_booking_api.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using Quan_ly_dat_phong_khach_san_truc_tuyen.Services.Admin;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,9 +9,21 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(connectionString));
-// Add services to the container.
 
+// KHAI BÁO CHÍNH SÁCH CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAngular", policy =>
+    {
+        policy.WithOrigins("http://localhost:4200")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
+// Add services to the container.
 builder.Services.AddControllers();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -20,7 +31,7 @@ builder.Services.AddSwaggerGen();
 // Đăng ký dịch vụ Email
 builder.Services.AddScoped<IEmailService, EmailService>();
 
-//ADMIN:
+//------------------ADMIN------------------
 builder.Services.AddScoped<IAdminService, AdminService>();
 
 var app = builder.Build();
@@ -31,6 +42,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+//KÍCH HOẠT SỬ DỤNG CORS (Bắt buộc phải đặt TRƯỚC UseAuthorization)
+app.UseCors("AllowAngular");
 
 app.UseHttpsRedirection();
 
