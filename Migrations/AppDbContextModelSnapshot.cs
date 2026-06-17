@@ -151,9 +151,10 @@ namespace hotel_booking_api.Migrations
                     b.Property<int>("RoomId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Status")
+                    b.Property<string>("Status")
+                        .IsRequired()
                         .HasMaxLength(30)
-                        .HasColumnType("int");
+                        .HasColumnType("nvarchar(30)");
 
                     b.Property<decimal>("TotalPrice")
                         .HasColumnType("decimal(14,2)");
@@ -816,7 +817,7 @@ namespace hotel_booking_api.Migrations
                             Email = "admin@hotelbooking.vn",
                             FullName = "Admin System",
                             IsLocked = false,
-                            PasswordHash = "$2a$11$OTDvj9bM//52gU9hVGZz2eOviOkegZz8OgMnopehFSztkFptn8Cqa",
+                            PasswordHash = "$2a$11$WoauOxMMTwN5JA04E8s1QeXs.9ftx7QXfXnVHWgg5azPoGyQuOR0m",
                             PhoneNumber = "0243123456",
                             Role = "Admin"
                         },
