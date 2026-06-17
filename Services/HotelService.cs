@@ -1,6 +1,6 @@
 ﻿using hotel_booking_api.DTOs.Home;
-using hotel_booking_api.Repositories.Interfaces;
-using hotel_booking_api.Services.Interfaces;
+using hotel_booking_api.Repositories.InterfaceR;
+using hotel_booking_api.Services.InterfaceS;
 
 namespace hotel_booking_api.Services
 {

@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using hotel_booking_api.Data;
 using hotel_booking_api.Models;
-using hotel_booking_api.Repositories.Interfaces;
+using hotel_booking_api.Repositories.InterfaceR;
 
 namespace hotel_booking_api.Repositories
 {

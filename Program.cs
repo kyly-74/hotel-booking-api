@@ -1,6 +1,6 @@
 using hotel_booking_api.Data;
 using hotel_booking_api.Services;
-using hotel_booking_api.Services.Interfaces;
+using hotel_booking_api.Services.InterfaceS;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -28,11 +28,14 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Đăng ký dịch vụ Email
-builder.Services.AddScoped<IEmailService, EmailService>();
 
 //------------------ADMIN------------------
 builder.Services.AddScoped<IAdminService, AdminService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
+
+
+// THÊM DÒNG NÀY ĐỂ SỬA LỖI ĐĂNG NHẬP:
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 var app = builder.Build();
 
@@ -46,10 +49,11 @@ if (app.Environment.IsDevelopment())
 //KÍCH HOẠT SỬ DỤNG CORS (Bắt buộc phải đặt TRƯỚC UseAuthorization)
 app.UseCors("AllowAngular");
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
 app.MapControllers();
+
 
 app.Run();

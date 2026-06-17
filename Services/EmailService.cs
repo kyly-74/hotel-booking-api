@@ -1,4 +1,4 @@
-﻿using hotel_booking_api.Services.Interfaces;
+﻿using hotel_booking_api.Services.InterfaceS;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using MimeKit;

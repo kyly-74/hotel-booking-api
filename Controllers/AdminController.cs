@@ -1,6 +1,7 @@
 ﻿using hotel_booking_api.DTOs.Admin;
-using hotel_booking_api.Services.Interfaces;
+using hotel_booking_api.Services.InterfaceS;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace hotel_booking_api.Controllers
 {
@@ -26,53 +27,43 @@ namespace hotel_booking_api.Controllers
             return Ok(users);
         }
 
-        // 2. XEM CHI TIẾT USER: GET /api/admin/users/{id}
-        [HttpGet("users/{id}")]
-        public async Task<IActionResult> GetUserDetail(int id)
-        {
-            var user = await _adminService.GetUserDetailAsync(id);
-            if (user == null) return NotFound(new { message = "Không tìm thấy người dùng" });
-            return Ok(user);
-        }
-
         // 3. KHÓA / MỞ KHÓA TÀI KHOẢN: POST /api/admin/users/{id}/toggle-lock
         [HttpPost("users/{id}/toggle-lock")]
-        public async Task<IActionResult> ToggleUserLock(int id, [FromBody] LockUserRequest request)
+        public async Task<IActionResult> ToggleUserLock(int id, [FromBody] LockUserDto request)
         {
             var result = await _adminService.ToggleUserLockAsync(id, request.IsLocked, request.Reason);
             if (!result.Success) return BadRequest(new { message = result.Message });
             return Ok(result);
         }
 
-        // 4. LẤY DANH SÁCH ĐƠN ĐĂNG KÝ: GET /api/admin/registrations
-        [HttpGet("registrations")]
-        public async Task<IActionResult> GetRegistrations(
-            [FromQuery] string? search, [FromQuery] string? status,
-            [FromQuery] DateTime? fromDate, [FromQuery] DateTime? toDate)
+        [HttpGet("hotels")]
+        public async Task<IActionResult> GetHotels()
         {
-            var regs = await _adminService.GetRegistrationsAsync(search, status, fromDate, toDate);
-            return Ok(regs);
+            var hotels = await _adminService.GetHotelsAsync();
+
+            return Ok(hotels);
         }
 
-        // 5. XEM CHI TIẾT ĐƠN ĐĂNG KÝ: GET /api/admin/registrations/{id}
-        [HttpGet("registrations/{id}")]
-        public async Task<IActionResult> GetRegistrationDetail(int id)
-        {
-            var reg = await _adminService.GetRegistrationDetailAsync(id);
-            if (reg == null) return NotFound(new { message = "Không tìm thấy hồ sơ" });
-            return Ok(reg);
-        }
+        //// 4. LẤY DANH SÁCH ĐƠN ĐĂNG KÝ: GET /api/admin/registrations
+        //[HttpGet("registrations")]
+        //public async Task<IActionResult> GetRegistrations(
+        //    [FromQuery] string? search, [FromQuery] string? status,
+        //    [FromQuery] DateTime? fromDate, [FromQuery] DateTime? toDate)
+        //{
+        //    var regs = await _adminService.GetRegistrationsAsync(search, status, fromDate, toDate);
+        //    return Ok(regs);
+        //}
 
-        // 6. PHÊ DUYỆT / TỪ CHỐI ĐƠN: POST /api/admin/registrations/{id}/review
-        [HttpPost("registrations/{id}/review")]
-        public async Task<IActionResult> ReviewRegistration(int id, [FromBody] ReviewRegistrationDto request)
-        {
-            // Tạm thời hardcode adminId = 1, khi nào có JWT lấy từ User.FindFirst hành vi thật sau
-            int adminId = 1;
-            var result = await _adminService.ReviewRegistrationAsync(id, request.IsApproved, request.RejectReason, adminId);
-            if (!result.Success) return BadRequest(new { message = result.Message });
-            return Ok(result);
-        }
+        //// 6. PHÊ DUYỆT / TỪ CHỐI ĐƠN: POST /api/admin/registrations/{id}/review
+        //[HttpPost("registrations/{id}/review")]
+        //public async Task<IActionResult> ReviewRegistration(int id, [FromBody] ReviewRegistrationDto request)
+        //{
+        //    // Tạm thời hardcode adminId = 1, khi nào có JWT lấy từ User.FindFirst hành vi thật sau
+        //    int adminId = 1;
+        //    var result = await _adminService.ReviewRegistrationAsync(id, request.IsApproved, request.RejectReason, adminId);
+        //    if (!result.Success) return BadRequest(new { message = result.Message });
+        //    return Ok(result);
+        //}
 
         // 7. BÁO CÁO DOANH THU: GET /api/admin/revenue
         [HttpGet("revenue")]
@@ -86,7 +77,7 @@ namespace hotel_booking_api.Controllers
     }
 
     // Class bổ trợ nhận request body cho hành động khóa user
-    public class LockUserRequest
+    public class LockUserDto
     {
         public bool IsLocked { get; set; }
         public string Reason { get; set; } = string.Empty;

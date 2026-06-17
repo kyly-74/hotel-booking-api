@@ -1,7 +1,7 @@
 ﻿using hotel_booking_api.Data;
 using hotel_booking_api.DTOs.Admin;
 using hotel_booking_api.Models;
-using hotel_booking_api.Services.Interfaces;
+using hotel_booking_api.Services.InterfaceS;
 using Microsoft.EntityFrameworkCore;
 
 namespace hotel_booking_api.Services
@@ -53,33 +53,14 @@ namespace hotel_booking_api.Services
                     PhoneNumber = x.PhoneNumber!,
                     Role = x.Role,
                     IsLocked = x.IsLocked,
-                    CreatedAt = x.CreatedAt
+                    CreatedAt = x.CreatedAt,
+
+                    TotalBookings = _context.Bookings.Count(b => b.CustomerId == x.Id),
+                    TotalReviews = _context.Reviews.Count(r => r.CustomerId == x.Id),
+                    TotalManagedHotels = x.Role == "HotelManager"
+                        ? _context.Hotels.Count(h => h.ManagerId == x.Id)
+                        : 0
                 }).ToListAsync();
-        }
-
-        public async Task<UserDetailDto?> GetUserDetailAsync(int userId)
-        {
-            var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == userId);
-            if (user == null) return null;
-
-            // Đếm số liệu tổng hợp sạch từ Database để trả về báo cáo chi tiết cho Angular
-            int totalBookings = await _context.Bookings.CountAsync(b => b.CustomerId == userId);
-            int totalReviews = await _context.Reviews.CountAsync(r => r.CustomerId == userId);
-            int totalHotels = (user.Role == "HotelManager") ? await _context.Hotels.CountAsync(h => h.ManagerId == userId) : 0;
-
-            return new UserDetailDto
-            {
-                Id = user.Id,
-                FullName = user.FullName,
-                Email = user.Email,
-                PhoneNumber = user.PhoneNumber!,
-                Role = user.Role,
-                IsLocked = user.IsLocked,
-                CreatedAt = user.CreatedAt,
-                TotalBookings = totalBookings,
-                TotalReviews = totalReviews,
-                TotalManagedHotels = totalHotels
-            };
         }
 
         public async Task<ServiceResult> ToggleUserLockAsync(int userId, bool isLocked, string reason)
@@ -88,7 +69,6 @@ namespace hotel_booking_api.Services
             try
             {
                 var user = await _context.Users
-                    .Include(u => u.MyRegistration)
                     .FirstOrDefaultAsync(u => u.Id == userId);
 
                 if (user == null) return new ServiceResult { Success = false, Message = "Không tìm thấy người dùng" };
@@ -144,10 +124,10 @@ namespace hotel_booking_api.Services
 
                 await _emailService.SendEmailAsync(user.Email, userSubject, userMailBody);
 
-                if (user.MyRegistration != null && !string.Equals(user.Email, user.MyRegistration.ContactEmail, StringComparison.OrdinalIgnoreCase))
-                {
-                    await _emailService.SendEmailAsync(user.MyRegistration.ContactEmail, userSubject, userMailBody);
-                }
+                //if (user.MyRegistration != null && !string.Equals(user.Email, user.MyRegistration.ContactEmail, StringComparison.OrdinalIgnoreCase))
+                //{
+                //    await _emailService.SendEmailAsync(user.MyRegistration.ContactEmail, userSubject, userMailBody);
+                //}
 
                 if (isHotelStaff && !string.IsNullOrEmpty(targetHotelName))
                 {
@@ -180,65 +160,88 @@ namespace hotel_booking_api.Services
         // ===================================================================
         // PHÂN HỆ QUẢN LÝ ĐƠN ĐĂNG KÝ (MAPPING DTO CHO FRONTEND ANGULAR)
         // ===================================================================
+        //public async Task<List<HotelRegistrationListDto>> GetRegistrationsAsync(string? search, string? status, DateTime? fromDate, DateTime? toDate)
+        //{
+        //    var query = _context.HotelRegistrations
+        //        .Include(x => x.User)
+        //        .Include(x => x.ReviewedBy)
+        //        .AsQueryable();
 
-        public async Task<List<HotelRegistrationListDto>> GetRegistrationsAsync(string? search, string? status, DateTime? fromDate, DateTime? toDate)
+        //    if (!string.IsNullOrWhiteSpace(search))
+        //    {
+        //        string lowerSearch = search.Trim().ToLower();
+        //        query = query.Where(x => x.HotelName.ToLower().Contains(lowerSearch) || x.User.FullName.ToLower().Contains(lowerSearch));
+        //    }
+
+        //    if (!string.IsNullOrWhiteSpace(status) && Enum.TryParse<HotelRegistrationStatus>(status, true, out var parsedStatus))
+        //    {
+        //        query = query.Where(x => x.Status == parsedStatus);
+        //    }
+
+        //    if (fromDate.HasValue) query = query.Where(x => x.SubmittedAt >= fromDate.Value);
+        //    if (toDate.HasValue) query = query.Where(x => x.SubmittedAt <= toDate.Value);
+
+        //    return await query
+        //        .OrderByDescending(x => x.Id)
+        //        .Select(x => new HotelRegistrationListDto
+        //        {
+        //            Id = x.Id,
+        //            UserName = x.User.FullName,
+        //            Name = x.HotelName,
+        //            ContactEmail = x.ContactEmail,
+        //            ContactPhone = x.ContactPhone,
+        //            Description = x.Description,
+        //            ImageUrl = x.HotelImageUrl,
+        //            BusinessLicenseUrl = x.BusinessLicenseUrl,
+        //            Status = x.Status.ToString(), // Trả về dạng String chữ cho Angular dễ render view
+        //            SubmittedAt = x.SubmittedAt,
+        //            ReviewedAt = x.ReviewedAt,
+        //            ReviewedBy = x.ReviewedBy != null
+        //                ? x.ReviewedBy.FullName
+        //                : null,
+        //            RejectReason = x.RejectReason
+        //        }).ToListAsync();
+        //}
+
+        public async Task<List<HotelListDto>> GetHotelsAsync()
         {
-            var query = _context.HotelRegistrations.Include(x => x.User).AsQueryable();
-
-            if (!string.IsNullOrWhiteSpace(search))
-            {
-                string lowerSearch = search.Trim().ToLower();
-                query = query.Where(x => x.HotelName.ToLower().Contains(lowerSearch) || x.User.FullName.ToLower().Contains(lowerSearch));
-            }
-
-            if (!string.IsNullOrWhiteSpace(status) && Enum.TryParse<HotelRegistrationStatus>(status, true, out var parsedStatus))
-            {
-                query = query.Where(x => x.Status == parsedStatus);
-            }
-
-            if (fromDate.HasValue) query = query.Where(x => x.SubmittedAt >= fromDate.Value);
-            if (toDate.HasValue) query = query.Where(x => x.SubmittedAt <= toDate.Value);
-
-            return await query
-                .OrderByDescending(x => x.Id)
-                .Select(x => new HotelRegistrationListDto
+            return await _context.Hotels
+                .Include(h => h.Manager)
+                .Include(h => h.Bookings)
+                .Include(h => h.Reviews)
+                .Include(h => h.RoomTypes)
+                .Select(h => new HotelListDto
                 {
-                    Id = x.Id,
-                    UserName = x.User.FullName,
-                    Name = x.HotelName, // Khớp với trường Name trong DTO của bạn gửi lên
-                    ContactPhone = x.ContactPhone,
-                    Status = x.Status.ToString(), // Trả về dạng String chữ cho Angular dễ render view
-                    SubmittedAt = x.SubmittedAt
-                }).ToListAsync();
-        }
+                    Id = h.Id,
+                    Name = h.Name,
+                    ImageUrl = h.ImageUrl,
+                    Address = h.Address,
+                    City = h.City,
+                    Description = h.Description,
+                    ManagerId = h.ManagerId,
+                    ManagerName = h.Manager.FullName,
+                    ManagerEmail = h.Manager.Email,
+                    Status = h.Status,
+                    IsActive = h.IsActive,
+                    StarRating = h.StarRating,
+                    CreatedAt = h.CreatedAt,
+                    TotalBookings =
+                        h.Bookings == null
+                        ? 0
+                        : h.Bookings.Count(),
 
-        public async Task<HotelRegistrationDetailDto?> GetRegistrationDetailAsync(int registrationId)
-        {
-            var reg = await _context.HotelRegistrations
-                .Include(x => x.User)
-                .Include(x => x.ReviewedBy)
-                .FirstOrDefaultAsync(x => x.Id == registrationId);
+                    TotalReviews =
+                       h.Reviews == null
+                       ? 0
+                       : h.Reviews.Count(),
 
-            if (reg == null) return null;
-
-            return new HotelRegistrationDetailDto
-            {
-                Id = reg.Id,
-                UserName = reg.User.FullName,
-                UserEmail = reg.User.Email,
-                Name = reg.HotelName, // Khớp chuẩn Name của HotelRegistrationDetailDto.cs mới
-                Address = reg.Address,
-                ContactEmail = reg.ContactEmail,
-                ContactPhone = reg.ContactPhone,
-                Description = reg.Description,
-                ImageUrl = reg.HotelImageUrl, // Khớp chuẩn với ImageUrl mới của bạn
-                BusinessLicenseUrl = reg.BusinessLicenseUrl,
-                Status = reg.Status.ToString(),
-                SubmittedAt = reg.SubmittedAt,
-                ReviewedAt = reg.ReviewedAt,
-                ReviewedBy = reg.ReviewedBy?.FullName,
-                RejectReason = reg.RejectReason
-            };
+                    TotalRooms =
+                        h.RoomTypes == null
+                        ? 0
+                        : h.RoomTypes.Count()
+                })
+                .OrderByDescending(h => h.Id)
+                .ToListAsync();
         }
 
         public async Task<ServiceResult> ReviewRegistrationAsync(int registrationId, bool isApproved, string? rejectReason, int adminId)

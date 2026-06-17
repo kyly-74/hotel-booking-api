@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using hotel_booking_api.Services.Interfaces;
+using hotel_booking_api.Services.InterfaceS;
 
 namespace hotel_booking_api.Controllers
 {
