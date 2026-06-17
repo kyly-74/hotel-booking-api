@@ -151,9 +151,10 @@ namespace hotel_booking_api.Migrations
                     b.Property<int>("RoomId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Status")
+                    b.Property<string>("Status")
+                        .IsRequired()
                         .HasMaxLength(30)
-                        .HasColumnType("int");
+                        .HasColumnType("nvarchar(30)");
 
                     b.Property<decimal>("TotalPrice")
                         .HasColumnType("decimal(14,2)");
