@@ -1,16 +1,15 @@
-﻿
-namespace hotel_booking_api.Models
+﻿namespace hotel_booking_api.DTOs.Admin
 {
     public class RevenueDetailItem
     {
         public string Label { get; set; } = string.Empty; // Tên Ngày/Tuần/Tháng/Năm hiển thị
-        public long Revenue { get; set; }
+        public decimal Revenue { get; set; }
     }
 
     public class HotelRevenueItem
     {
         public string HotelName { get; set; } = string.Empty;
-        public long Revenue { get; set; }
+        public decimal Revenue { get; set; }
     }
     public class RevenueReport
     {
@@ -21,8 +20,8 @@ namespace hotel_booking_api.Models
         public DateTime ToDate { get; set; }
 
         // Số liệu tổng hợp
-        public long TotalRevenue { get; set; }
-        public long PreviousTotalRevenue { get; set; }
+        public decimal TotalRevenue { get; set; }
+        public decimal PreviousTotalRevenue { get; set; }
         public double GrowthRate { get; set; } // Tỉ lệ phần trăm tăng trưởng
 
         // Chi tiết danh sách hiển thị trên Bảng số liệu & Biểu đồ

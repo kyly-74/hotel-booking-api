@@ -1,4 +1,5 @@
 
+
 ﻿using hotel_booking_api.Data;
 using hotel_booking_api.Repositories;
 using hotel_booking_api.Repositories.Implementations;
@@ -10,12 +11,18 @@ using Microsoft.EntityFrameworkCore;
 using Quan_ly_dat_phong_khach_san_truc_tuyen.Services;
 using System.Text;
 
+using hotel_booking_api.Data;
+using hotel_booking_api.Services;
+using hotel_booking_api.Services.InterfaceS;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(connectionString));
+
 
 
 
@@ -57,22 +64,35 @@ builder.Services.AddScoped<IRoomRepository, RoomRepository>();
 // 3. Đăng ký cho tầng Service
 builder.Services.AddScoped<IRoomService, RoomService>();
 
-//room
+
+
+// KHAI BÁO CHÍNH SÁCH CORS
+
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAngularApp", policy =>
+    options.AddPolicy("AllowAngular", policy =>
     {
-        policy.WithOrigins("http://localhost:4200") // Cổng Angular vẫn là 4200
+        policy.WithOrigins("http://localhost:4200")
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
 });
 
+// Add services to the container.
+builder.Services.AddControllers();
+
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 
+//------------------ADMIN------------------
+builder.Services.AddScoped<IAdminService, AdminService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 
-
+// THÊM DÒNG NÀY ĐỂ SỬA LỖI ĐĂNG NHẬP:
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 var app = builder.Build();
 
@@ -122,7 +142,7 @@ builder.Services.AddCors(options => {
     options.AddPolicy("AllowAngular", policy => policy.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin());
 });
 
-var app = builder.Build();
+
 
 // ========================================================
 // 🚀 6. KÍCH HOẠT MIDDLEWARE SWAGGER (ĐÃ BỔ SUNG)
@@ -155,9 +175,22 @@ app.Use(async (context, next) =>
 });
 
 
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+
+//KÍCH HOẠT SỬ DỤNG CORS (Bắt buộc phải đặt TRƯỚC UseAuthorization)
 app.UseCors("AllowAngular");
-app.UseAuthentication();
+
+//app.UseHttpsRedirection();
+
 app.UseAuthorization();
+
 app.MapControllers();
+
 
 app.Run();
