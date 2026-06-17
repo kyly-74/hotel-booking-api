@@ -11,10 +11,6 @@ using Microsoft.EntityFrameworkCore;
 using Quan_ly_dat_phong_khach_san_truc_tuyen.Services;
 using System.Text;
 
-using hotel_booking_api.Data;
-using hotel_booking_api.Services;
-using hotel_booking_api.Services.InterfaceS;
-using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,9 +18,6 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(connectionString));
-
-
-
 
 
 // Sửa dòng này để ép .NET Core hiểu cả chữ thường lẫn chữ hoa, tự động chuyển đổi JSON sang camelCase
@@ -38,21 +31,10 @@ builder.Services.AddControllers()
 
 
 // ========================================================
-// 🛠️ 1. ĐĂNG KÝ HỆ THỐNG CONTROLLERS & DATABASE
-// ========================================================
-
-builder.Services.AddControllers();
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-
-// ========================================================
 // 🔍 2. CẤU HÌNH SWAGGER GENERATOR (BẮT BUỘC PHẢI DƯỚI ADDCONTROLLERS)
 // ========================================================
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
-
-
 
 
 // Đăng ký Service quản lý loại phòng
@@ -63,7 +45,6 @@ builder.Services.AddScoped<IRoomRepository, RoomRepository>();
 
 // 3. Đăng ký cho tầng Service
 builder.Services.AddScoped<IRoomService, RoomService>();
-
 
 
 // KHAI BÁO CHÍNH SÁCH CORS
@@ -78,7 +59,7 @@ builder.Services.AddCors(options =>
     });
 });
 
-// Add services to the container.
+
 builder.Services.AddControllers();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -95,6 +76,7 @@ builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 
 var app = builder.Build();
+
 
 
 
@@ -173,6 +155,15 @@ app.Use(async (context, next) =>
     context.Response.Headers.Append("Cross-Origin-Embedder-Policy", "unsafe-none");
     await next();
 });
+
+
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
 
 
 // Configure the HTTP request pipeline.
