@@ -151,10 +151,9 @@ namespace hotel_booking_api.Migrations
                     b.Property<int>("RoomId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
+                    b.Property<int>("Status")
                         .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
+                        .HasColumnType("int");
 
                     b.Property<decimal>("TotalPrice")
                         .HasColumnType("decimal(14,2)");
@@ -480,6 +479,12 @@ namespace hotel_booking_api.Migrations
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
 
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<string>("RoomNumber")
                         .IsRequired()
                         .HasMaxLength(20)
@@ -504,6 +509,7 @@ namespace hotel_booking_api.Migrations
                         {
                             Id = 1,
                             Floor = "1",
+                            IsDeleted = false,
                             RoomNumber = "101",
                             RoomTypeId = 1,
                             Status = "Available"
@@ -512,6 +518,7 @@ namespace hotel_booking_api.Migrations
                         {
                             Id = 2,
                             Floor = "1",
+                            IsDeleted = false,
                             RoomNumber = "102",
                             RoomTypeId = 1,
                             Status = "Available"
@@ -520,6 +527,7 @@ namespace hotel_booking_api.Migrations
                         {
                             Id = 3,
                             Floor = "2",
+                            IsDeleted = false,
                             RoomNumber = "201",
                             RoomTypeId = 1,
                             Status = "Available"
@@ -528,6 +536,7 @@ namespace hotel_booking_api.Migrations
                         {
                             Id = 4,
                             Floor = "3",
+                            IsDeleted = false,
                             RoomNumber = "301",
                             RoomTypeId = 2,
                             Status = "Available"
@@ -536,6 +545,7 @@ namespace hotel_booking_api.Migrations
                         {
                             Id = 5,
                             Floor = "3",
+                            IsDeleted = false,
                             RoomNumber = "302",
                             RoomTypeId = 2,
                             Status = "Available"
@@ -544,6 +554,7 @@ namespace hotel_booking_api.Migrations
                         {
                             Id = 6,
                             Floor = "5",
+                            IsDeleted = false,
                             RoomNumber = "501",
                             RoomTypeId = 3,
                             Status = "Available"
