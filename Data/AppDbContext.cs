@@ -205,7 +205,7 @@ namespace hotel_booking_api.Data
                     FullName = "Admin System",
                     Email = "admin@hotelbooking.vn",
                     Role = "Admin",
-                    PasswordHash = "hashed_admin_password",
+                    PasswordHash = BCrypt.Net.BCrypt.HashPassword("admin123"),
                     PhoneNumber = "0243123456",
                     IsLocked = false,
                     CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc)

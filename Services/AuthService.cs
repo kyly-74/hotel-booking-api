@@ -119,8 +119,12 @@ namespace hotel_booking_api.Services
                 new Claim(ClaimTypes.Role, user.Role)
             };
 
+            var jwtKey = _config["Jwt:Key"] ?? "Sieu_Mat_Khau_Bao_Mat_Jwt_Token_Hotel_Booking_2026_Secret_Key_Okey";
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]!));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var durationStr = _config["Jwt:DurationInDays"];
+            double durationInDays = double.TryParse(durationStr, out var days) ? days : 7;
 
             var token = new SecurityTokenDescriptor
             {

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace hotel_booking_api.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialDatabase : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -215,7 +215,9 @@ namespace hotel_booking_api.Migrations
                     RoomTypeId = table.Column<int>(type: "int", nullable: false),
                     RoomNumber = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     Status = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
-                    Floor = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: true)
+                    Floor = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: true),
+                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -378,7 +380,7 @@ namespace hotel_booking_api.Migrations
                 columns: new[] { "Id", "CreatedAt", "Email", "FullName", "IsLocked", "PasswordHash", "PhoneNumber", "Role" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "admin@hotelbooking.vn", "Admin System", false, "hashed_admin_password", "0243123456", "Admin" },
+                    { 1, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "admin@hotelbooking.vn", "Admin System", false, "$2a$11$WoauOxMMTwN5JA04E8s1QeXs.9ftx7QXfXnVHWgg5azPoGyQuOR0m", "0243123456", "Admin" },
                     { 2, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "manager@grandhotel.vn", "Nguyễn Văn Quản Lý", false, "hashed_manager_password", "0901234567", "HotelManager" },
                     { 3, new DateTime(2024, 2, 1, 0, 0, 0, 0, DateTimeKind.Utc), "customer1@gmail.com", "Trần Thị Khách Hàng", false, null, "0987654321", "Customer" },
                     { 4, new DateTime(2024, 3, 1, 0, 0, 0, 0, DateTimeKind.Utc), "customer2@gmail.com", "Lê Văn Bình", false, null, "0912345678", "Customer" }
@@ -425,15 +427,15 @@ namespace hotel_booking_api.Migrations
 
             migrationBuilder.InsertData(
                 table: "Rooms",
-                columns: new[] { "Id", "Floor", "RoomNumber", "RoomTypeId", "Status" },
+                columns: new[] { "Id", "Floor", "ImageUrl", "IsDeleted", "RoomNumber", "RoomTypeId", "Status" },
                 values: new object[,]
                 {
-                    { 1, "1", "101", 1, "Available" },
-                    { 2, "1", "102", 1, "Available" },
-                    { 3, "2", "201", 1, "Available" },
-                    { 4, "3", "301", 2, "Available" },
-                    { 5, "3", "302", 2, "Available" },
-                    { 6, "5", "501", 3, "Available" }
+                    { 1, "1", null, false, "101", 1, "Available" },
+                    { 2, "1", null, false, "102", 1, "Available" },
+                    { 3, "2", null, false, "201", 1, "Available" },
+                    { 4, "3", null, false, "301", 2, "Available" },
+                    { 5, "3", null, false, "302", 2, "Available" },
+                    { 6, "5", null, false, "501", 3, "Available" }
                 });
 
             migrationBuilder.CreateIndex(

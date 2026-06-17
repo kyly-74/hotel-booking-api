@@ -42,7 +42,7 @@ namespace hotel_booking_api.Models
         [Column(TypeName = "decimal(14,2)")]
         public decimal TotalPrice { get; set; }
 
-       //Pending | Confirmed | CheckedIn | CheckedOut | Cancelled</summary>
+
         [MaxLength(30)]
         public BookingStatus Status { get; set; } = BookingStatus.Pending;
 
