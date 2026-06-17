@@ -19,5 +19,6 @@ namespace hotel_booking_api.DTOs.Room_Management
 
         [MaxLength(10)]
         public string? Floor { get; set; }
+        public string? ImageUrl { get; internal set; }
     }
 }
