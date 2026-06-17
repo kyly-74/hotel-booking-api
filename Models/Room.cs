@@ -21,5 +21,7 @@ namespace hotel_booking_api.Models
         // Navigation
         public RoomType RoomType { get; set; } = null!;
         public ICollection<Booking> Bookings { get; set; } = new List<Booking>();
+        public string? ImageUrl { get; internal set; }
+        public bool IsDeleted { get; internal set; }
     }
 }   
