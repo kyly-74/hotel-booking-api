@@ -118,6 +118,10 @@ namespace hotel_booking_api.Data
 
                 // Index tăng tốc độ truy vấn check phòng trống
                 e.HasIndex(b => new { b.RoomId, b.CheckInDate, b.CheckOutDate });
+
+                e.Property(b => b.Status)
+     .HasConversion<string>() // Ép EF Core lưu tên Enum dưới dạng chữ (String) xuống DB
+     .HasMaxLength(30);
             });
 
             // Payments (1-1 với Booking)
