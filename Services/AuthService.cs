@@ -31,7 +31,7 @@ namespace hotel_booking_api.Services
                 Email = dto.Email,
                 PhoneNumber = dto.PhoneNumber,
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password),
-                Role = "Customer" 
+                Role = "HotelManager" 
             };
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
