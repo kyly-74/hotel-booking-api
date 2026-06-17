@@ -15,6 +15,8 @@ namespace hotel_booking_api.Services
         private readonly AppDbContext _context;
         private readonly IConfiguration _config;
 
+        public object BCrypt { get; private set; }
+
         public AuthService(AppDbContext context, IConfiguration config)
         {
             _context = context;

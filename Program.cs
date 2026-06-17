@@ -1,11 +1,14 @@
-<<<<<<< HEAD
+
 ﻿using hotel_booking_api.Data;
+using hotel_booking_api.Repositories;
 using hotel_booking_api.Repositories.Implementations;
+using hotel_booking_api.Repositories.InterfaceR;
 using hotel_booking_api.Repositories.Interfaces;
 using hotel_booking_api.Services;
 using hotel_booking_api.Services.InterfaceS;
 using Microsoft.EntityFrameworkCore;
 using Quan_ly_dat_phong_khach_san_truc_tuyen.Services;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,25 +30,10 @@ builder.Services.AddControllers()
 
 
 
-// Add services to the container.
-
-=======
-using hotel_booking_api.Data;
-using hotel_booking_api.Repositories;
-using hotel_booking_api.Repositories.InterfaceR;
-using hotel_booking_api.Services;
-using hotel_booking_api.Services.InterfaceS;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
-
-var builder = WebApplication.CreateBuilder(args);
-
 // ========================================================
 // 🛠️ 1. ĐĂNG KÝ HỆ THỐNG CONTROLLERS & DATABASE
 // ========================================================
->>>>>>> 540e9037c7b16ac1afcfd27447d065f464d8d80a
+
 builder.Services.AddControllers();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -56,7 +44,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-<<<<<<< HEAD
+
 
 
 
@@ -91,9 +79,9 @@ var app = builder.Build();
 
 
 
-// Configure the HTTP request pipeline.
+
 if (app.Environment.IsDevelopment())
-=======
+
 // ========================================================
 // 🤝 3. ĐĂNG KÝ DEPENDENCY INJECTION (DI)
 // ========================================================
@@ -108,24 +96,24 @@ builder.Services.AddScoped<VNPayService>();
 var jwtSettings = builder.Configuration.GetSection("Jwt");
 var key = Encoding.UTF8.GetBytes(jwtSettings["Key"]!);
 
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-})
-.AddJwtBearer(options =>
-{
-    options.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = true,
-        ValidateIssuerSigningKey = true,
-        ValidIssuer = jwtSettings["Issuer"],
-        ValidAudience = jwtSettings["Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(key)
-    };
-});
+//builder.Services.AddAuthentication(options =>
+//{
+//    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+//    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+//})
+//.AddJwtBearer(options =>
+//{
+//    options.TokenValidationParameters = new TokenValidationParameters
+//    {
+//        ValidateIssuer = true,
+//        ValidateAudience = true,
+//        ValidateLifetime = true,
+//        ValidateIssuerSigningKey = true,
+//        ValidIssuer = jwtSettings["Issuer"],
+//        ValidAudience = jwtSettings["Audience"],
+//        IssuerSigningKey = new SymmetricSecurityKey(key)
+//    };
+//});
 
 // ========================================================
 // 🌐 5. CẤU HÌNH CORS CHO ANGULAR
@@ -142,20 +130,20 @@ var app = builder.Build();
 // Đặt Swagger làm trang chủ gốc luôn cho tiện test
 app.UseSwagger();
 app.UseSwaggerUI(c =>
->>>>>>> 540e9037c7b16ac1afcfd27447d065f464d8d80a
+
 {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "Hotel Booking API v1");
     c.RoutePrefix = string.Empty; // Gõ localhost không cần thêm đuôi /swagger vẫn ra trang chủ Swagger
 });
 
-<<<<<<< HEAD
+
 
 //room
 app.UseCors("AllowAngularApp");
 
 
 app.UseHttpsRedirection();
-=======
+
 // ========================================================
 // 🔀 7. CẤU HÌNH PIPELINE MIDDLEWARES KHÁC
 // ========================================================
@@ -165,7 +153,7 @@ app.Use(async (context, next) =>
     context.Response.Headers.Append("Cross-Origin-Embedder-Policy", "unsafe-none");
     await next();
 });
->>>>>>> 540e9037c7b16ac1afcfd27447d065f464d8d80a
+
 
 app.UseCors("AllowAngular");
 app.UseAuthentication();
